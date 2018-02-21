@@ -5,114 +5,93 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/**
+ * Testa comportamentos das telas do sistema de leiloes utilizando selenium
+ * 
+ * @author ferna
+ *
+ */
 public class UsuariosSystemTest {
 
+	// driver do chrome necessário para utilizar o navegador
 	ChromeDriver driver;
+	// Page Object criado para representar a tela de listagem de usuarios
+	// http://localhost:8080/usuarios
+	UsuariosPage usuarios;
 
+	/**
+	 * Inicia antes dos testes para carregar as configurções para o uso do selenium
+	 */
 	@Before
 	public void carregaDriverSelenium() {
+		// seta nas propriedades do sistema a localização necessária do driver do chrome
 		System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
+		// instancia driver do chrome
 		driver = new ChromeDriver();
+		usuarios = new UsuariosPage(driver);
 	}
 
+	// fecha o driver do chrome após a execução dos testes
 	@After
 	public void fechaDriverSelenium() {
 		driver.close();
 	}
 
+	/**
+	 * Teste que verifica a inclusão de um usua´rio novo no sistema
+	 */
 	@Test
 	public void deveAdicionarUmUsuarioTest() {
 
-		inicializaTelaCadastroUsuario();
-
-		// busca na pagina aberta no get, o elemento pelo nome
-		WebElement campoUsuario = driver.findElement(By.name("usuario.nome"));
 		String nome = "Carla Weitzel";
-		// seta nome no campo
-		campoUsuario.sendKeys(nome);
-
-		WebElement campoEmail = driver.findElement(By.name("usuario.email"));
 		String email = "carla@google.com";
-		campoEmail.sendKeys(email);
 
-		WebElement botaoSalvar = driver.findElement(By.id("btnSalvar"));
-		botaoSalvar.click();
+		usuarios.visita();
+		usuarios.novo().cadastra(nome, email);
 
-		// busca a pagina atual posicionada
-		String paginaAtual = driver.getPageSource();
-
-		boolean achouNome = paginaAtual.contains(nome);
-		boolean achouEmail = paginaAtual.contains(email);
-
-		assertTrue(achouNome);
-		assertTrue(achouEmail);
-
-	}
-
-	@Test
-	public void inserindoUsuarioSemNomeTest() {
-
-		inicializaTelaCadastroUsuario();
-
-		WebElement campoEmail = driver.findElement(By.name("usuario.email"));
-		String email = "carla@google.com";
-		campoEmail.sendKeys(email);
-
-		WebElement botaoSalvar = driver.findElement(By.id("btnSalvar"));
-		botaoSalvar.click();
-
-		// busca a pagina atual posicionada
-		String paginaAtual = driver.getPageSource();
-
-		assertTrue(paginaAtual.contains("Nome obrigatorio!"));
-
-	}
-
-	@Test
-	public void inserindoUsuarioSemNomeESemEmailTest() {
-
-		inicializaTelaCadastroUsuario();
-
-		WebElement botaoSalvar = driver.findElement(By.id("btnSalvar"));
-		botaoSalvar.click();
-
-		// busca a pagina atual posicionada
-		String paginaAtual = driver.getPageSource();
-
-		assertTrue(paginaAtual.contains("Nome obrigatorio!"));
-		assertTrue(paginaAtual.contains("E-mail obrigatorio!"));
-
-	}
-
-	@Test
-	public void linkNovoUsuarioTest() {
-
-		inicializaTelaListagemUsuarios();
-
-		// clicando em um link
-		WebElement linkNovoUsuario = driver.findElement(By.linkText("Novo Usuário"));
-		linkNovoUsuario.click();
-
-		// busca a pagina atual posicionada
-		String paginaAtual = driver.getPageSource();
-
-		assertTrue(paginaAtual.contains("Nome:"));
+		assertTrue(usuarios.existeNaListagem(nome, email));
 
 	}
 
 	/**
-	 * 
+	 * Teste que verifica se o sistema valida caso um novo usuario for criado sem
+	 * nome
 	 */
-	private void inicializaTelaCadastroUsuario() {
-		driver.get("http://localhost:8080/usuarios/new");
+	@Test
+	public void inserindoUsuarioSemNomeTest() {
+		String email = "carla@google.com";
+
+		usuarios.visita();
+		usuarios.novo().cadastra("", email);
+
+		assertTrue(usuarios.validaNomeObrigatorio());
+
 	}
 
-	private void inicializaTelaListagemUsuarios() {
-		driver.get("http://localhost:8080/usuarios");
+	/**
+	 * Valida mensagens caso usuario tentar criar um novo usuario sem informar nome
+	 * e email
+	 */
+	@Test
+	public void inserindoUsuarioSemNomeESemEmailTest() {
+		usuarios.visita();
+		usuarios.novo().cadastra("", "");
+
+		assertTrue(usuarios.validaNomeEEmailObrigatorios());
+	}
+
+	/**
+	 * Testa o link para um novo usuario, na pagina de listagem dos usuarios
+	 */
+	@Test
+	public void linkNovoUsuarioTest() {
+
+		usuarios.visita();
+		usuarios.novo();
+
+		assertTrue(usuarios.validaPaginaCadasdro());
 	}
 
 }
