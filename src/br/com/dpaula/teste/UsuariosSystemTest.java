@@ -115,4 +115,24 @@ public class UsuariosSystemTest {
 
 	}
 
+	/**
+	 * Teste que verifica a inclusão de um usua´rio novo no sistema
+	 */
+	@Test
+	public void validaEdicaoUsuarioTest() {
+
+		String nome = "Ana excluir";
+		String email = "AnaExcluir@google.com";
+
+		usuarios.visita();
+		usuarios.novo().cadastra(nome, email);
+
+		assertTrue(usuarios.existeNaListagem(nome, email));
+
+		usuarios.excluir(1);
+
+		assertFalse(usuarios.existeNaListagem(nome, email));
+
+	}
+
 }
