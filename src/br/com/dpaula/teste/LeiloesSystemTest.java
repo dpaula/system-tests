@@ -13,7 +13,7 @@ public class LeiloesSystemTest {
 	ChromeDriver driver;
 	// Page Object criado para representar a tela de listagem de usuarios
 	// http://localhost:8080/usuarios
-	LeilaoPage leiloes;
+	LeiloesPage leiloes;
 
 	/**
 	 * Inicia antes dos testes para carregar as configurções para o uso do selenium
@@ -24,7 +24,7 @@ public class LeiloesSystemTest {
 		System.setProperty("webdriver.chrome.driver", "./driver/chromedriver.exe");
 		// instancia driver do chrome
 		driver = new ChromeDriver();
-		leiloes = new LeilaoPage(driver);
+		leiloes = new LeiloesPage(driver);
 	}
 
 	// fecha o driver do chrome após a execução dos testes
