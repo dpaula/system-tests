@@ -24,7 +24,7 @@ public class UsuariosPage {
 	}
 
 	public void visita() {
-		driver.get("http://localhost:8080/usuarios");
+		driver.get(URLDaAplicacao.URL_BASE + "/usuarios");
 	}
 
 	public NovoUsuarioPage novo() {

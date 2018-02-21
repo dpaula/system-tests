@@ -13,8 +13,8 @@ public class LanceSystemTest {
 	ChromeDriver driver;
 	// http://localhost:8080/usuarios
 	LeiloesPage leiloes;
-	private String usuarioLeilao;
-	private String usuarioLance;
+	private String usuarioLeilao = "Usuario Leilao";
+	private String usuarioLance = "Usuario Lance";
 
 	/**
 	 * Inicia antes dos testes para carregar as configurções para o uso do selenium
@@ -26,15 +26,13 @@ public class LanceSystemTest {
 		driver = new ChromeDriver();
 		leiloes = new LeiloesPage(driver);
 
-		usuarioLeilao = criaNovoUsuario("Usuario Leilao");
-		usuarioLance = criaNovoUsuario("Usuario Lance");
-		criaLeilao();
+		criaNovosUsuariosELeilao();
 	}
 
 	// fecha o driver do chrome após a execução dos testes E limpa a base
 	@After
 	public void fechaDriverSelenium() {
-		driver.get("http://localhost:8080/apenas-teste/limpa");
+		driver.get(URLDaAplicacao.URL_BASE + "/apenas-teste/limpa");
 		driver.close();
 	}
 
@@ -48,24 +46,13 @@ public class LanceSystemTest {
 		assertTrue(lances.existeLance(usuarioLance, valor));
 	}
 
-	private String criaNovoUsuario(String usuario) {
+	private void criaNovosUsuariosELeilao() {
 
-		UsuariosPage usuarios = new UsuariosPage(driver);
-		usuarios.visita();
-		usuarios.novo().cadastra(usuario, usuario.trim().replace(" ", "").toLowerCase());
-		usuarios.existeNaListagem(usuario, usuario.trim().replace(" ", "").toLowerCase());
-		return usuario;
-	}
-
-	private void criaLeilao() {
-
-		String leilao = "Geladeira";
-		int valor = 123;
-		boolean usado = true;
-
-		leiloes.visita();
-		leiloes.novo().cadastra(leilao, valor, usuarioLeilao, usado);
-		leiloes.existe(leilao, valor, usuarioLeilao, usado);
+		new CriadorDeCenarios(driver)/**/
+				.umUsuario(usuarioLeilao, usuarioLeilao.trim().replace(" ", "").toLowerCase())/**/
+				.umUsuario(usuarioLance, usuarioLance.trim().replace(" ", "").toLowerCase())/**/
+				.umLeilao(usuarioLeilao, "Geladeira", 123, true);
 
 	}
+
 }

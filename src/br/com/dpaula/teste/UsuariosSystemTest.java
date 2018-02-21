@@ -37,7 +37,7 @@ public class UsuariosSystemTest {
 	// fecha o driver do chrome após a execução dos testes E limpa a base
 	@After
 	public void fechaDriverSelenium() {
-		driver.get("http://localhost:8080/apenas-teste/limpa");
+		driver.get(URLDaAplicacao.URL_BASE + "/apenas-teste/limpa");
 		driver.close();
 	}
 
