@@ -37,6 +37,7 @@ public class UsuariosSystemTest {
 	// fecha o driver do chrome após a execução dos testes
 	@After
 	public void fechaDriverSelenium() {
+		driver.get("http://localhost:8080/apenas-teste/limpa");
 		driver.close();
 	}
 
@@ -116,22 +117,23 @@ public class UsuariosSystemTest {
 	}
 
 	/**
-	 * Teste que verifica a inclusão de um usua´rio novo no sistema
+	 * Teste a alteração de um usuário. cadastra um usuário, clica em Editar, altera
+	 * os valores e submete o formulário.
 	 */
 	@Test
 	public void validaEdicaoUsuarioTest() {
 
-		String nome = "Ana excluir";
-		String email = "AnaExcluir@google.com";
+		String nome = "Ana alterar";
+		String email = "AnaAlterar@google.com";
 
 		usuarios.visita();
 		usuarios.novo().cadastra(nome, email);
 
 		assertTrue(usuarios.existeNaListagem(nome, email));
 
-		usuarios.excluir(1);
+		usuarios.alterar().altera(nome + "Feito", email);
 
-		assertFalse(usuarios.existeNaListagem(nome, email));
+		assertTrue(usuarios.existeNaListagem(nome + "Feito", email));
 
 	}
 

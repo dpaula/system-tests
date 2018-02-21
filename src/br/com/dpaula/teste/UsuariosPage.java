@@ -32,6 +32,12 @@ public class UsuariosPage {
 		return new NovoUsuarioPage(driver);
 	}
 
+	public AlteraUsuarioPage alterar() {
+		List<WebElement> usuarios = driver.findElements(By.linkText("editar"));
+		usuarios.get(usuarios.size() - 1).click();
+		return new AlteraUsuarioPage(driver);
+	}
+
 	public boolean existeNaListagem(String nome, String email) {
 		return driver.getPageSource().contains(nome) && driver.getPageSource().contains(email);
 	}
