@@ -1,8 +1,20 @@
 package br.com.dpaula.teste;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+/**
+ * O padrão Page Objects nos ajuda a separar o código do teste em si da
+ * manipulação das páginas da nossa aplicação, tornando tanto o teste quanto a
+ * manipulação mais fáceis de serem evoluídas.
+ * 
+ * 
+ * @author ferna
+ *
+ */
 public class UsuariosPage {
 
 	private ChromeDriver driver;
@@ -35,6 +47,13 @@ public class UsuariosPage {
 
 	public boolean validaPaginaCadasdro() {
 		return driver.getPageSource().contains("Nome:");
+	}
+
+	public void excluir(int posicao) {
+		List<WebElement> listaUsuarios = driver.findElements(By.tagName("button"));
+		listaUsuarios.get(listaUsuarios.size() - 1).click();
+		driver.switchTo().alert().accept();
+
 	}
 
 }

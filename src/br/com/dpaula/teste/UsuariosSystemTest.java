@@ -1,5 +1,6 @@
 package br.com.dpaula.teste;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -92,6 +93,26 @@ public class UsuariosSystemTest {
 		usuarios.novo();
 
 		assertTrue(usuarios.validaPaginaCadasdro());
+	}
+
+	/**
+	 * Teste que verifica a inclusão de um usua´rio novo no sistema
+	 */
+	@Test
+	public void validaExclusaoUsuarioTest() {
+
+		String nome = "Ana excluir";
+		String email = "AnaExcluir@google.com";
+
+		usuarios.visita();
+		usuarios.novo().cadastra(nome, email);
+
+		assertTrue(usuarios.existeNaListagem(nome, email));
+
+		usuarios.excluir(1);
+
+		assertFalse(usuarios.existeNaListagem(nome, email));
+
 	}
 
 }
